@@ -42,7 +42,7 @@ public class TodoAppApplication {
                 User admin = new User();
                 admin.setFullname("Anusha");
                 admin.setUsername("anusha12");
-                admin.setPassword("anusha@12"); // ⚠ No encoding as per your request
+                admin.setPassword("$2a$12$zeGyl9AVUrN8zXaUFrYoS.0ovbSstqGri0I01AT3Lkl.IO.oGlP4i"); // ⚠ No encoding as per your request
                 admin.setEmail("anusha@email.com");
 
                 // Assign ADMIN role

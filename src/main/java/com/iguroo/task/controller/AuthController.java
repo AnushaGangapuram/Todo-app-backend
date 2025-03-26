@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.iguroo.task.dto.AuthResponseDto;
 import com.iguroo.task.dto.LoginDto;
 import com.iguroo.task.dto.UserDto;
 import com.iguroo.task.service.AuthService;
@@ -39,8 +40,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
-        String response = authService.login(loginDto);
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto) {
+        AuthResponseDto response = authService.login(loginDto);
         return ResponseEntity.ok(response); // Returning token as JSON
     }
 }

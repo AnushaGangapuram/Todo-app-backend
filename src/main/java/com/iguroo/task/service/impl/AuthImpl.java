@@ -1,12 +1,14 @@
 package com.iguroo.task.service.impl;
 
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.iguroo.task.config.JwtUtil;
+import com.iguroo.task.dto.AuthResponseDto;
 import com.iguroo.task.dto.LoginDto;
 import com.iguroo.task.dto.UserDto;
 import com.iguroo.task.entity.Role;
@@ -28,6 +30,12 @@ public class AuthImpl implements AuthService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public String register(@NotNull UserDto userDto) {
         if (userRepository.existsByUsername(userDto.getUsername())) {
@@ -43,6 +51,7 @@ public class AuthImpl implements AuthService {
 
         // Map user data and assign default USER role
         User user = UserMapper.mapToEntity(userDto, null);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword())); // ✅ Encode Password
         user.setRoles(Set.of(userRole)); // Assign USER role
 
         userRepository.save(user);
@@ -50,21 +59,26 @@ public class AuthImpl implements AuthService {
     }
 
     @Override
-    public String login(@NotNull LoginDto loginDto) {
-        Optional<User> userOpt = userRepository.findByUsername(loginDto.getUsername());
+    public AuthResponseDto login(LoginDto loginDto) {
+        User user = userRepository.findByUsername(loginDto.getUsername())
+                .orElseThrow(() -> new TodoApiException(HttpStatus.NOT_FOUND, "User not found"));
 
-        if (userOpt.isEmpty()) {
+        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             throw new TodoApiException(HttpStatus.UNAUTHORIZED, "Invalid username or password!");
         }
 
-        User user = userOpt.get();
+        // ✅ Generate Access & Refresh Tokens
+        String accessToken = jwtUtil.generateToken(user.getUsername(), user.getRoles().iterator().next().getRolename());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
 
-        // Check if the passwords match (without encoding)
-        if (!user.getPassword().equals(loginDto.getPassword())) {
-            throw new TodoApiException(HttpStatus.UNAUTHORIZED, "Invalid username or password!");
-        }
-
-        return "✅ Login successful!";
+        // ✅ Return structured response with user details
+        return new AuthResponseDto(
+                accessToken,
+                refreshToken,
+                user.getId(),
+                user.getUsername(),
+                user.getRoles().iterator().next().getRolename()
+        );
     }
 
     @Override
@@ -94,6 +108,7 @@ public class AuthImpl implements AuthService {
 
         // Map user data and assign ADMIN role
         User newAdmin = UserMapper.mapToEntity(userDto, null);
+        newAdmin.setPassword(passwordEncoder.encode(userDto.getPassword())); // ✅ Encode Password
         newAdmin.setRoles(Set.of(adminRole)); // Assign ADMIN role
 
         userRepository.save(newAdmin);
