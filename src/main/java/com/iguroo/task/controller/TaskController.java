@@ -4,11 +4,15 @@ import com.iguroo.task.dto.TaskDto;
 import com.iguroo.task.entity.Task;
 import com.iguroo.task.service.TaskService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+
+@PreAuthorize("hasAuthority('ADMIN')")
+
 @RequestMapping("/api/admin/tasks")
 public class TaskController {
 
@@ -17,6 +21,12 @@ public class TaskController {
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
+    
+    @GetMapping
+    public ResponseEntity<List<Task>> getAllTasks() {
+        return ResponseEntity.ok(taskService.getAllTasks());
+    }
+
 
     @PostMapping("/assign")
     public ResponseEntity<Task> assignTask(@RequestBody TaskDto taskDto) {

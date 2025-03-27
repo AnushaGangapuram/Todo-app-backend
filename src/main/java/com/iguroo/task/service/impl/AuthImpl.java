@@ -67,11 +67,11 @@ public class AuthImpl implements AuthService {
             throw new TodoApiException(HttpStatus.UNAUTHORIZED, "Invalid username or password!");
         }
 
-        // ✅ Generate Access & Refresh Tokens
+        // Generate Access & Refresh Tokens
         String accessToken = jwtUtil.generateToken(user.getUsername(), user.getRoles().iterator().next().getRolename());
         String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
 
-        // ✅ Return structured response with user details
+        // Return structured response with user details
         return new AuthResponseDto(
                 accessToken,
                 refreshToken,
@@ -80,6 +80,7 @@ public class AuthImpl implements AuthService {
                 user.getRoles().iterator().next().getRolename()
         );
     }
+
 
     @Override
     public String registerAdmin(UserDto userDto, Long adminId) {

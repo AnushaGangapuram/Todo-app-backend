@@ -4,6 +4,7 @@ package com.iguroo.task.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ public class AuthController {
     
     
     // Register an ADMIN - Only an existing ADMIN can call this API
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register/admin/{adminId}")
     public ResponseEntity<String> registerAdmin(@RequestBody UserDto userDto, @PathVariable Long adminId) {
         String response = authService.registerAdmin(userDto, adminId);
