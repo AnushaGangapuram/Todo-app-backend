@@ -32,7 +32,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = new Task();
         task.setTask(taskDto.getTask());
 
-        // ✅ Convert String status to Enum before setting it
+        // Convert String status to Enum before setting it
         try {
             task.setStatus(TaskStatus.valueOf(taskDto.getStatus().toUpperCase()));
         } catch (IllegalArgumentException e) {
@@ -44,8 +44,6 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(task);
     }
 
-
-    @Override
     public List<Task> getTasksByUserId(Long userId) {
         return taskRepository.findByUserId(userId);
     }
@@ -57,7 +55,7 @@ public class TaskServiceImpl implements TaskService {
 
         task.setTask(taskDto.getTask());
 
-        // ✅ Convert String status to Enum
+        // Convert String status to Enum
         try {
             task.setStatus(TaskStatus.valueOf(taskDto.getStatus().toUpperCase()));
         } catch (IllegalArgumentException e) {
@@ -66,7 +64,6 @@ public class TaskServiceImpl implements TaskService {
 
         return taskRepository.save(task);
     }
-
 
     @Override
     public void deleteTask(Long taskId) {
@@ -94,6 +91,4 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
-
-
 }

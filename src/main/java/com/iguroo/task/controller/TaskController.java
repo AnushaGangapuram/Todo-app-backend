@@ -8,11 +8,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
-
 @PreAuthorize("hasAuthority('ADMIN')")
-
 @RequestMapping("/api/admin/tasks")
 public class TaskController {
 
@@ -21,12 +19,11 @@ public class TaskController {
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
-    
+
     @GetMapping
     public ResponseEntity<List<Task>> getAllTasks() {
         return ResponseEntity.ok(taskService.getAllTasks());
     }
-
 
     @PostMapping("/assign")
     public ResponseEntity<Task> assignTask(@RequestBody TaskDto taskDto) {

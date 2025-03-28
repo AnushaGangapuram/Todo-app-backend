@@ -1,6 +1,7 @@
 package com.iguroo.task.controller;
 
 import com.iguroo.task.entity.User;
+
 import com.iguroo.task.service.AdminService;
 
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/admin/users")
 public class AdminController {
