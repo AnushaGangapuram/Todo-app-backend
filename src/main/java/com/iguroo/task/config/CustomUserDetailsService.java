@@ -23,17 +23,17 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("🔍 Checking username in DB: " + username);
+        System.out.println(" Checking username in DB: " + username);
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    System.out.println("❌ User not found: " + username);
+                    System.out.println("User not found: " + username);
                     return new UsernameNotFoundException("User not found with username: " + username);
                 });
 
-        System.out.println("✅ User found: " + user.getUsername() + " | Roles: " + user.getRoles());
+        System.out.println("User found: " + user.getUsername() + " | Roles: " + user.getRoles());
 
-        // ✅ Convert roles to Spring Security authorities
+        //  Convert roles to Spring Security authorities
         Set<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRolename()))
                 .collect(Collectors.toSet());
@@ -43,7 +43,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                authorities  // ✅ Fixed issue: Roles converted to GrantedAuthority
+                authorities  //  Fixed issue: Roles converted to GrantedAuthority
         );
     }
 }
