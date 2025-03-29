@@ -23,14 +23,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    // 🟢 Get all tasks for a user
+    // Get all tasks for a user
     @GetMapping("/tasks/{userId}")
     public ResponseEntity<List<Task>> getUserTasks(@PathVariable Long userId) {
         List<Task> tasks = taskService.getTasksByUserId(userId);
         return ResponseEntity.ok(tasks);
     }
 
-    // 🟢 Update task status (Users can only update status)
+    //  Update task status (Users can only update status)
     @PutMapping("/tasks/{taskId}/status")
     public ResponseEntity<Task> updateTaskStatus(
             @PathVariable Long taskId,
@@ -39,14 +39,14 @@ public class UserController {
         return ResponseEntity.ok(updatedTask);
     }
 
-    // 🟢 Get User Profile
+    //  Get User Profile
     @GetMapping("/profile/{userId}")
     public ResponseEntity<User> getUserProfile(@PathVariable Long userId) {
         User user = userService.getUserById(userId);
         return ResponseEntity.ok(user);
     }
 
-    // 🟢 Update User Profile
+    //  Update User Profile
     @PutMapping("/profile/{userId}")
     public ResponseEntity<User> updateUserProfile(
             @PathVariable Long userId, @RequestBody User updatedUser) {
