@@ -24,7 +24,7 @@ public class TodoAppApplication {
     @Transactional // Ensures database consistency
     public CommandLineRunner loadRolesAndAdmin(RoleRepository roleRepository, UserRepository userRepository) {
         return args -> {
-            // ✅ Create roles if they don't exist
+            //  Create roles if they don't exist
             Role adminRole = roleRepository.findByRolename("ADMIN").orElseGet(() -> {
                 Role role = new Role();
                 role.setRolename("ADMIN");
@@ -37,7 +37,7 @@ public class TodoAppApplication {
                 return roleRepository.save(role);
             });
 
-            // ✅ Prevent duplicate admin creation by checking email
+            //  Prevent duplicate admin creation by checking email
             if (!userRepository.existsByEmail("anusha@email.com")) { 
                 User admin = new User();
                 admin.setFullname("Anusha");
@@ -49,7 +49,7 @@ public class TodoAppApplication {
                 admin.setRoles(Set.of(adminRole));
 
                 userRepository.save(admin);
-                System.out.println("✅ First ADMIN created successfully!");
+                System.out.println(" First ADMIN created successfully!");
             } else {
                 System.out.println("⚠ Admin with email 'anusha@email.com' already exists. Skipping creation.");
             }
